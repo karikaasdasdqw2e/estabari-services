@@ -1,4 +1,4 @@
-const CACHE_NAME = "estabari-services-v3";
+const CACHE_NAME = "estabari-services-v4";
 const CORE_ASSETS = [
   "./",
   "./index.html",
