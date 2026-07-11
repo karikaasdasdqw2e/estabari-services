@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f6848">
+  <meta name="description" content="مجمع خدمات إصطباري — ابحث عن الصنايعي أو الطبيب أو المطعم أو أي خدمة داخل قرية إصطباري، وسجّل خدمتك بسهولة.">
+  <meta name="keywords" content="إصطباري, خدمات إصطباري, صنايعية إصطباري, نجار, سباك, كهربائي, دكتور, مطعم">
+  <meta property="og:title" content="مجمع خدمات إصطباري">
+  <meta property="og:description" content="كل خدمات البلد في مكان واحد">
+  <meta property="og:type" content="website">
+  <title>مجمع خدمات إصطباري | كل خدمات البلد في مكان واحد</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">انتقل إلى المحتوى</a>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="الصفحة الرئيسية">
+        <span class="brand-mark" aria-hidden="true">إ</span>
+        <span class="brand-copy">
+          <strong>مجمع خدمات إصطباري</strong>
+          <small>كل خدمات البلد في مكان واحد</small>
+        </span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+        <a href="#searchSection">ابحث عن خدمة</a>
+        <a href="#categoriesSection">الأقسام</a>
+        <a href="#providersSection">مقدمو الخدمات</a>
+        <a href="#howItWorks">كيف يعمل؟</a>
+      </nav>
+
+      <button class="button button-primary header-action" type="button" data-open-register>
+        <span aria-hidden="true">＋</span>
+        سجّل خدمتك
+      </button>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section class="hero" id="searchSection">
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow"><span>●</span> دليل خدمات أهل البلد</span>
+          <h1>الخدمة اللي محتاجها<br><em>هتلاقيها في إصطباري</em></h1>
+          <p>دوّر على نجار، سباك، دكتور، مطعم، مدرس أو أي خدمة، واتواصل مع مقدمها مباشرةً من غير وسطاء.</p>
+
+          <form class="hero-search" id="heroSearchForm" role="search">
+            <label class="sr-only" for="heroSearchInput">ابحث عن خدمة</label>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="heroSearchInput" type="search" autocomplete="off" placeholder="اكتب اسم الخدمة... مثال: نجار" aria-describedby="searchHint">
+            <button type="submit" class="button button-accent">ابحث الآن</button>
+          </form>
+          <div class="quick-searches" id="searchHint">
+            <span>الأكثر بحثًا:</span>
+            <button type="button" data-quick-search="نجار">نجار</button>
+            <button type="button" data-quick-search="سباك">سباك</button>
+            <button type="button" data-quick-search="دكتور">دكتور</button>
+            <button type="button" data-quick-search="مطعم">مطعم</button>
+          </div>
+
+          <div class="hero-trust">
+            <div><strong id="servicesCount">+20</strong><span>قسم خدمة</span></div>
+            <div><strong id="providersCount">0</strong><span>مقدم خدمة</span></div>
+            <div><strong>مباشر</strong><span>اتصال وواتساب</span></div>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="اختيارات سريعة">
+          <div class="panel-badge">ابدأ من هنا</div>
+          <article class="action-card action-card-search">
+            <div class="action-icon" aria-hidden="true">🔎</div>
+            <div>
+              <h2>محتاج خدمة؟</h2>
+              <p>ابحث بالاسم أو تصفح الأقسام واختار أقرب مقدم خدمة ليك.</p>
+              <button class="text-button" type="button" data-focus-search>ابدأ البحث <span>←</span></button>
+            </div>
+          </article>
+          <article class="action-card action-card-register">
+            <div class="action-icon" aria-hidden="true">🧰</div>
+            <div>
+              <h2>بتقدّم خدمة؟</h2>
+              <p>سجّل بياناتك ومكانك عشان أهل البلد يقدروا يوصلوا لك بسهولة.</p>
+              <button class="text-button" type="button" data-open-register>سجّل خدمتك <span>←</span></button>
+            </div>
+          </article>
+          <div class="privacy-note"><span aria-hidden="true">🛡️</span> بياناتك لا تُنشر إلا بعد المراجعة</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="categoriesSection">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">تصفّح بسهولة</span>
+            <h2>كل الخدمات حسب القسم</h2>
+            <p>اختار القسم المناسب وهتظهر لك كل الخدمات المسجلة تحته.</p>
+          </div>
+          <button class="button button-secondary" type="button" id="showAllCategories">عرض كل الأقسام</button>
+        </div>
+        <div class="categories-grid" id="categoriesGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="providersSection">
+      <div class="container">
+        <div class="section-heading providers-heading">
+          <div>
+            <span class="section-kicker">دليل البلد</span>
+            <h2 id="providersTitle">مقدمو الخدمات</h2>
+            <p id="providersSubtitle">ابحث أو اختار قسمًا لعرض النتائج المناسبة.</p>
+          </div>
+          <div class="view-controls" aria-label="خيارات عرض النتائج">
+            <button class="icon-button active" id="gridViewButton" type="button" title="عرض شبكي" aria-label="عرض شبكي">▦</button>
+            <button class="icon-button" id="listViewButton" type="button" title="عرض قائمة" aria-label="عرض قائمة">☷</button>
+          </div>
+        </div>
+
+        <div class="results-toolbar">
+          <div class="compact-search">
+            <span aria-hidden="true">⌕</span>
+            <label class="sr-only" for="providerSearchInput">بحث داخل الخدمات</label>
+            <input id="providerSearchInput" type="search" placeholder="بحث بالاسم أو الخدمة أو المنطقة">
+          </div>
+          <select id="categoryFilter" aria-label="تصفية حسب القسم">
+            <option value="all">كل الأقسام</option>
+          </select>
+          <select id="sortFilter" aria-label="ترتيب النتائج">
+            <option value="recommended">الترتيب المقترح</option>
+            <option value="name">حسب الاسم</option>
+            <option value="newest">الأحدث تسجيلًا</option>
+            <option value="nearby">الأقرب لموقعي</option>
+          </select>
+          <button class="location-filter" id="useMyLocationButton" type="button"><span aria-hidden="true">⌖</span> استخدم موقعي</button>
+        </div>
+
+        <div class="active-filter" id="activeFilter" hidden>
+          <span id="activeFilterText"></span>
+          <button type="button" id="clearFiltersButton">مسح التصفية ×</button>
+        </div>
+
+        <div class="providers-grid" id="providersGrid" aria-live="polite"></div>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <div class="empty-icon" aria-hidden="true">🔍</div>
+          <h3>ملقيناش نتائج مطابقة</h3>
+          <p>جرّب كلمة أبسط، اختار قسم تاني، أو اطلب إضافة الخدمة للمجمع.</p>
+          <button class="button button-primary" type="button" data-open-register>أضف الخدمة للمجمع</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-green" id="howItWorks">
+      <div class="container">
+        <div class="section-heading light-heading">
+          <div>
+            <span class="section-kicker">بسيطة وسريعة</span>
+            <h2>هتلاقي خدمتك في 3 خطوات</h2>
+          </div>
+        </div>
+        <div class="steps-grid">
+          <article><span class="step-number">1</span><div class="step-icon">⌕</div><h3>اكتب اللي محتاجه</h3><p>ابحث باسم الخدمة أو افتح القسم المناسب.</p></article>
+          <article><span class="step-number">2</span><div class="step-icon">✓</div><h3>اختار مقدم الخدمة</h3><p>راجع وصف الخدمة والعنوان ومواعيد العمل.</p></article>
+          <article><span class="step-number">3</span><div class="step-icon">☎</div><h3>اتواصل مباشرةً</h3><p>اتصل أو ابعت رسالة واتساب وافتح الاتجاهات للمكان.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section register-cta">
+      <div class="container cta-card">
+        <div class="cta-icon" aria-hidden="true">📍</div>
+        <div>
+          <span class="section-kicker">أنت صاحب شغل أو محل؟</span>
+          <h2>خلّي أهل إصطباري يوصلوا لك بسهولة</h2>
+          <p>التسجيل مجاني، وبياناتك هتظهر بعد مراجعتها والتأكد منها.</p>
+        </div>
+        <button class="button button-accent button-large" type="button" data-open-register>سجّل خدمتك الآن</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a class="brand footer-brand" href="#top">
+          <span class="brand-mark">إ</span>
+          <span class="brand-copy"><strong>مجمع خدمات إصطباري</strong><small>من أهل البلد ولأهل البلد</small></span>
+        </a>
+        <p>منصة مجتمعية لتسهيل الوصول إلى الخدمات ومساعدة أصحاب المهن والمحلات داخل قرية إصطباري.</p>
+      </div>
+      <div><h3>روابط سريعة</h3><a href="#searchSection">ابحث عن خدمة</a><a href="#categoriesSection">الأقسام</a><button type="button" data-open-register>تسجيل خدمة</button></div>
+      <div><h3>معلومات مهمة</h3><button type="button" data-open-info="privacy">سياسة الخصوصية</button><button type="button" data-open-info="terms">شروط الاستخدام</button><button type="button" data-open-info="report">الإبلاغ عن بيانات خاطئة</button></div>
+      <div><h3>شارك في تطوير المجمع</h3><p>لاحظت خدمة ناقصة أو عندك اقتراح؟ سجّلها أو شارك الفكرة مع إدارة الموقع.</p><button class="footer-suggestion" type="button" data-open-info="suggestion">إرسال اقتراح</button></div>
+    </div>
+    <div class="container footer-bottom"><span>© <span id="currentYear"></span> مجمع خدمات إصطباري</span><span>صُمم لخدمة أهل البلد 🤍</span></div>
+  </footer>
+
+  <nav class="mobile-nav" aria-label="تنقل الهاتف">
+    <a href="#top"><span>⌂</span>الرئيسية</a>
+    <a href="#categoriesSection"><span>▦</span>الأقسام</a>
+    <button type="button" class="mobile-add" data-open-register><span>＋</span>سجّل خدمة</button>
+    <a href="#providersSection"><span>⌕</span>البحث</a>
+    <button type="button" id="favoritesButton"><span>♡</span>المفضلة</button>
+  </nav>
+
+  <dialog class="app-dialog registration-dialog" id="registrationDialog" aria-labelledby="registrationTitle">
+    <form method="dialog" class="dialog-shell" id="serviceRegistrationForm">
+      <div class="dialog-header">
+        <div><span class="section-kicker">انضم إلى دليل البلد</span><h2 id="registrationTitle">تسجيل خدمة جديدة</h2><p>اكتب بيانات صحيحة وواضحة. سيتم نشر الخدمة بعد المراجعة.</p></div>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="إغلاق">×</button>
+      </div>
+
+      <div class="form-progress" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
+
+      <div class="form-grid">
+        <label class="field"><span>الاسم الكامل أو اسم النشاط <b>*</b></span><input name="name" required minlength="3" maxlength="80" placeholder="مثال: ورشة محمد للنجارة"></label>
+        <label class="field"><span>رقم الموبايل <b>*</b></span><input name="phone" required inputmode="tel" autocomplete="tel" pattern="^(?:\+20|0)?1[0125][0-9]{8}$" placeholder="01xxxxxxxxx"><small>رقم مصري صحيح مكوّن من 11 رقمًا.</small></label>
+        <label class="field"><span>رقم واتساب</span><input name="whatsapp" inputmode="tel" placeholder="اتركه فارغًا لو نفس رقم الموبايل"></label>
+        <label class="field"><span>نوع الخدمة <b>*</b></span><select name="category" id="registrationCategory" required><option value="">اختار القسم</option></select></label>
+        <label class="field full-width"><span>اسم الخدمة بالتحديد <b>*</b></span><input name="serviceName" required minlength="2" maxlength="80" placeholder="مثال: نجارة أثاث وأبواب وصيانة"></label>
+        <label class="field full-width"><span>وصف مختصر للخدمة</span><textarea name="description" maxlength="300" rows="3" placeholder="اكتب أهم الخدمات اللي بتقدمها وخبرتك باختصار"></textarea><small><span id="descriptionCounter">0</span>/300</small></label>
+        <label class="field"><span>المنطقة أو الشارع <b>*</b></span><input name="area" required maxlength="80" placeholder="مثال: شارع الطابونة"></label>
+        <label class="field"><span>العنوان بالتفصيل</span><input name="address" maxlength="160" placeholder="علامة مميزة تساعد الناس توصل لك"></label>
+        <label class="field"><span>مواعيد العمل</span><input name="openingHours" maxlength="100" placeholder="مثال: يوميًا من 9 ص إلى 10 م"></label>
+        <label class="field"><span>رابط صفحة أو حساب</span><input name="socialUrl" type="url" placeholder="https://facebook.com/..."></label>
+
+        <div class="field full-width location-field">
+          <span>موقع المكان على الخريطة</span>
+          <div class="location-box">
+            <div><strong id="locationStatus">لم يتم تحديد الموقع</strong><small>يمكنك تحديد موقعك الحالي أو لصق رابط خرائط جوجل.</small></div>
+            <button class="button button-secondary" id="captureLocationButton" type="button"><span>⌖</span> تحديد موقعي</button>
+          </div>
+          <input type="hidden" name="latitude">
+          <input type="hidden" name="longitude">
+          <input name="mapsUrl" type="url" placeholder="أو الصق رابط الموقع من خرائط جوجل">
+        </div>
+
+        <div class="field full-width service-options">
+          <span>معلومات إضافية</span>
+          <label class="check-card"><input type="checkbox" name="delivery"><span>🚚</span><div><strong>يوجد توصيل أو خدمة منزلية</strong><small>حددها لو بتوصل أو بتروح للعميل.</small></div></label>
+          <label class="check-card"><input type="checkbox" name="emergency"><span>⚡</span><div><strong>متاح للحالات العاجلة</strong><small>مثل أعطال الكهرباء أو السباكة الطارئة.</small></div></label>
+        </div>
+
+        <label class="consent full-width"><input type="checkbox" name="consent" required><span>أؤكد أن البيانات صحيحة، وأوافق على عرضها للزوار بعد المراجعة. <b>*</b></span></label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-secondary" type="button" data-close-dialog>إلغاء</button>
+        <button class="button button-primary button-large" type="submit" id="submitServiceButton"><span class="button-label">إرسال للمراجعة</span><span class="button-loader" hidden></span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog info-dialog" id="infoDialog" aria-labelledby="infoDialogTitle">
+    <div class="dialog-shell compact-dialog">
+      <div class="dialog-header"><div><h2 id="infoDialogTitle"></h2></div><button class="dialog-close" type="button" data-close-info aria-label="إغلاق">×</button></div>
+      <div id="infoDialogContent"></div>
+      <div class="dialog-actions"><button class="button button-primary" type="button" data-close-info>حسنًا</button></div>
+    </div>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
