@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">شعار مجمع خدمات إصطباري</title>
+  <desc id="desc">حرف إ عربي داخل علامة موقع خضراء</desc>
+  <rect width="512" height="512" rx="120" fill="#0f6848"/>
+  <path d="M256 76c-92 0-166 71-166 159 0 114 136 211 153 222a23 23 0 0 0 26 0c17-11 153-108 153-222 0-88-74-159-166-159Z" fill="#fff" opacity=".98"/>
+  <circle cx="256" cy="231" r="103" fill="#f0ad23"/>
+  <text x="256" y="289" text-anchor="middle" font-family="Tahoma,Arial,sans-serif" font-size="174" font-weight="700" fill="#073e2d">إ</text>
+</svg>
