@@ -1,0 +1,20 @@
+{
+  "name": "مجمع خدمات إصطباري",
+  "short_name": "خدمات إصطباري",
+  "description": "دليل خدمات أهل قرية إصطباري",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f9f7",
+  "theme_color": "#0f6848",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
