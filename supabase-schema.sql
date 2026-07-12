@@ -1,6 +1,6 @@
 -- قاعدة بيانات مجمع خدمات إصطباري
 -- شغّل الملف كاملًا داخل Supabase SQL Editor.
--- الملف آمن لإعادة التشغيل ويضيف لوحة الإدارة الآمنة وسياسات التحكم.
+-- الملف آمن لإعادة التشغيل ويضيف لوحة الإدارة والتقييمات وسياسات التحكم.
 
 create extension if not exists pgcrypto;
 
@@ -78,7 +78,7 @@ as $$
 $$;
 
 revoke all on function public.is_estabari_admin() from public;
-grant execute on function public.is_estabari_admin() to authenticated;
+grant execute on function public.is_estabari_admin() to anon, authenticated;
 
 -- النشر التلقائي للزوار، مع السماح للإدارة بالتحكم الكامل في الحالة والخصائص.
 create or replace function public.prepare_public_provider()
@@ -194,6 +194,130 @@ $$;
 revoke all on function public.track_site_visit(uuid) from public;
 grant execute on function public.track_site_visit(uuid) to anon, authenticated;
 
+-- ============================================================
+-- تقييم مقدمي الخدمات بالنجوم
+-- كل متصفح يحصل على UUID عشوائي، ويملك تقييمًا واحدًا لكل خدمة.
+-- إعادة التقييم تعدّل التقييم السابق بدل إنشاء تقييم مكرر.
+-- لا يتم إظهار معرفات المصوتين للعامة.
+-- ============================================================
+
+create table if not exists public.provider_ratings (
+  id uuid primary key default gen_random_uuid(),
+  provider_id uuid not null references public.providers(id) on delete cascade,
+  voter_id uuid not null,
+  stars smallint not null check (stars between 1 and 5),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (provider_id, voter_id)
+);
+
+create index if not exists provider_ratings_provider_idx
+on public.provider_ratings(provider_id);
+
+create index if not exists provider_ratings_updated_at_idx
+on public.provider_ratings(updated_at desc);
+
+drop trigger if exists provider_ratings_set_updated_at on public.provider_ratings;
+create trigger provider_ratings_set_updated_at
+before update on public.provider_ratings
+for each row execute function public.set_updated_at();
+
+alter table public.provider_ratings enable row level security;
+
+-- لا توجد قراءة أو كتابة مباشرة للعامة؛ الاستخدام يتم عبر دوال محمية فقط.
+drop policy if exists "Public can read provider ratings" on public.provider_ratings;
+drop policy if exists "Public can insert provider ratings" on public.provider_ratings;
+drop policy if exists "Public can update provider ratings" on public.provider_ratings;
+
+drop policy if exists "Estabari admin can manage provider ratings" on public.provider_ratings;
+create policy "Estabari admin can manage provider ratings"
+on public.provider_ratings
+for all
+to authenticated
+using (public.is_estabari_admin())
+with check (public.is_estabari_admin());
+
+grant select, insert, update, delete on public.provider_ratings to authenticated;
+
+create or replace function public.submit_provider_rating(
+  p_provider_id uuid,
+  p_voter_id uuid,
+  p_stars smallint
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  provider_is_public boolean;
+  result jsonb;
+begin
+  if p_provider_id is null or p_voter_id is null then
+    raise exception 'بيانات التقييم غير مكتملة';
+  end if;
+
+  if p_stars < 1 or p_stars > 5 then
+    raise exception 'التقييم يجب أن يكون من نجمة إلى 5 نجوم';
+  end if;
+
+  select exists(
+    select 1
+    from public.providers
+    where id = p_provider_id and status = 'approved'
+  ) into provider_is_public;
+
+  if not provider_is_public then
+    raise exception 'الخدمة غير متاحة للتقييم';
+  end if;
+
+  insert into public.provider_ratings (provider_id, voter_id, stars)
+  values (p_provider_id, p_voter_id, p_stars)
+  on conflict (provider_id, voter_id)
+  do update set
+    stars = excluded.stars,
+    updated_at = now();
+
+  select jsonb_build_object(
+    'provider_id', p_provider_id,
+    'average_rating', round(avg(stars)::numeric, 2),
+    'ratings_count', count(*)
+  ) into result
+  from public.provider_ratings
+  where provider_id = p_provider_id;
+
+  return result;
+end;
+$$;
+
+revoke all on function public.submit_provider_rating(uuid, uuid, smallint) from public;
+grant execute on function public.submit_provider_rating(uuid, uuid, smallint) to anon, authenticated;
+
+create or replace function public.get_provider_rating_summaries()
+returns table (
+  provider_id uuid,
+  average_rating numeric,
+  ratings_count bigint
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    ratings.provider_id,
+    round(avg(ratings.stars)::numeric, 2) as average_rating,
+    count(*)::bigint as ratings_count
+  from public.provider_ratings as ratings
+  inner join public.providers as providers
+    on providers.id = ratings.provider_id
+  where providers.status = 'approved'
+  group by ratings.provider_id;
+$$;
+
+revoke all on function public.get_provider_rating_summaries() from public;
+grant execute on function public.get_provider_rating_summaries() to anon, authenticated;
+
 -- إحصائيات لوحة التحكم، لا تعمل إلا لحساب الإدارة.
 create or replace function public.admin_dashboard_stats()
 returns jsonb
@@ -217,7 +341,9 @@ begin
     'featured_providers', (select count(*) from public.providers where featured = true),
     'verified_providers', (select count(*) from public.providers where verified = true),
     'unique_visitors', (select count(*) from public.site_visitors),
-    'total_visits', (select coalesce(sum(visit_count), 0) from public.site_visitors)
+    'total_visits', (select coalesce(sum(visit_count), 0) from public.site_visitors),
+    'total_ratings', (select count(*) from public.provider_ratings),
+    'rated_providers', (select count(distinct provider_id) from public.provider_ratings)
   ) into result;
 
   return result;
@@ -230,5 +356,8 @@ grant execute on function public.admin_dashboard_stats() to authenticated;
 comment on table public.providers is 'مقدمو الخدمات المسجلون في مجمع خدمات إصطباري';
 comment on column public.providers.status is 'approved للنشر، pending للمراجعة، rejected للمرفوض، suspended للموقوف';
 comment on table public.site_visitors is 'عداد المتصفحات الفريدة وزياراتها بدون بيانات شخصية';
+comment on table public.provider_ratings is 'تقييم نجوم واحد لكل متصفح لكل مقدم خدمة';
 comment on function public.is_estabari_admin() is 'يتحقق أن المستخدم الحالي هو حساب إدارة مجمع خدمات إصطباري';
 comment on function public.admin_dashboard_stats() is 'إحصائيات محمية للوحة الإدارة';
+comment on function public.submit_provider_rating(uuid, uuid, smallint) is 'يحفظ أو يعدل تقييم متصفح واحد لخدمة محددة';
+comment on function public.get_provider_rating_summaries() is 'يعرض متوسط وعدد تقييمات الخدمات المنشورة بدون كشف معرفات المصوتين';
