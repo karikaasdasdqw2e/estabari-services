@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /estabari-services/admin.html
+
+Sitemap: https://karikaasdasdqw2e.github.io/estabari-services/sitemap.xml
