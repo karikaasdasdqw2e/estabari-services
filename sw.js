@@ -1,4 +1,4 @@
-const CACHE_NAME = "estabari-services-v6";
+const CACHE_NAME = "estabari-services-v7";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -7,8 +7,10 @@ const CORE_ASSETS = [
   "./dark-theme.css",
   "./admin.css",
   "./app.js",
+  "./ratings.js",
   "./admin.js",
   "./config.js",
+  "./admin-config.js",
   "./manifest.json",
   "./assets/logo.svg"
 ];
@@ -58,7 +60,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   const alwaysFreshFiles = [
-    "/config.js", "/app.js", "/admin.js", "/styles.css", "/dark-theme.css", "/admin.css"
+    "/config.js", "/admin-config.js", "/app.js", "/ratings.js", "/admin.js",
+    "/styles.css", "/dark-theme.css", "/admin.css"
   ];
   if (alwaysFreshFiles.some((file) => requestUrl.pathname.endsWith(file))) {
     event.respondWith(networkFirst(event.request));
