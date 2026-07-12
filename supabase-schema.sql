@@ -1,6 +1,6 @@
 -- قاعدة بيانات مجمع خدمات إصطباري
 -- شغّل الملف كاملًا داخل Supabase SQL Editor.
--- الملف آمن لإعادة التشغيل ويحدّث القاعدة القديمة إلى النشر التلقائي.
+-- الملف آمن لإعادة التشغيل ويضيف لوحة الإدارة الآمنة وسياسات التحكم.
 
 create extension if not exists pgcrypto;
 
@@ -29,12 +29,11 @@ create table if not exists public.providers (
   verified boolean not null default false,
   featured boolean not null default false,
   status text not null default 'approved' check (status in ('pending','approved','rejected','suspended')),
-  rejection_reason text,
+  rejection_reason text check (rejection_reason is null or char_length(rejection_reason) <= 200),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
--- لو الجدول كان متعمل بالنظام القديم، غيّر الافتراضي واعتمد الطلبات المعلقة الحالية.
 alter table public.providers alter column status set default 'approved';
 update public.providers set status = 'approved' where status = 'pending';
 
@@ -60,7 +59,28 @@ create trigger providers_set_updated_at
 before update on public.providers
 for each row execute function public.set_updated_at();
 
--- النشر التلقائي مؤقتًا، مع منع الزائر من توثيق أو تمييز نفسه.
+-- ============================================================
+-- حساب الإدارة
+-- اسم المستخدم داخل لوحة الموقع: karika
+-- البريد الداخلي المستخدم في Supabase Auth: karika@estabari.local
+-- كلمة المرور لا توضع داخل GitHub أو SQL.
+-- أنشئ المستخدم يدويًا من Authentication > Users واجعله Confirmed.
+-- ============================================================
+
+create or replace function public.is_estabari_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce(auth.jwt() ->> 'email', '') = 'karika@estabari.local';
+$$;
+
+revoke all on function public.is_estabari_admin() from public;
+grant execute on function public.is_estabari_admin() to authenticated;
+
+-- النشر التلقائي للزوار، مع السماح للإدارة بالتحكم الكامل في الحالة والخصائص.
 create or replace function public.prepare_public_provider()
 returns trigger
 language plpgsql
@@ -68,6 +88,10 @@ security invoker
 set search_path = public
 as $$
 begin
+  if public.is_estabari_admin() then
+    return new;
+  end if;
+
   new.status = 'approved';
   new.verified = false;
   new.featured = false;
@@ -103,11 +127,17 @@ with check (
   and rejection_reason is null
 );
 
+-- الإدارة وحدها تستطيع قراءة كل الحالات وإضافة وتعديل وحذف الخدمات.
+drop policy if exists "Estabari admin can manage all providers" on public.providers;
+create policy "Estabari admin can manage all providers"
+on public.providers
+for all
+to authenticated
+using (public.is_estabari_admin())
+with check (public.is_estabari_admin());
+
 grant select, insert on public.providers to anon, authenticated;
-
--- لا توجد سياسات عامة للتعديل أو الحذف.
--- تقدر توقف أو تحذف أي خدمة من Supabase Dashboard باستخدام حساب الإدارة.
-
+grant update, delete on public.providers to authenticated;
 
 -- ============================================================
 -- عداد الزوار الحقيقي
@@ -127,10 +157,16 @@ on public.site_visitors(last_seen desc);
 
 alter table public.site_visitors enable row level security;
 
--- لا نضيف سياسة SELECT عامة حتى لا يستطيع الزوار قراءة معرّفات بعضهم.
 drop policy if exists "Public can read visitors" on public.site_visitors;
 drop policy if exists "Public can insert visitors" on public.site_visitors;
 drop policy if exists "Public can update visitors" on public.site_visitors;
+
+drop policy if exists "Estabari admin can view visitor statistics" on public.site_visitors;
+create policy "Estabari admin can view visitor statistics"
+on public.site_visitors
+for select
+to authenticated
+using (public.is_estabari_admin());
 
 create or replace function public.track_site_visit(p_visitor_id uuid)
 returns bigint
@@ -158,6 +194,41 @@ $$;
 revoke all on function public.track_site_visit(uuid) from public;
 grant execute on function public.track_site_visit(uuid) to anon, authenticated;
 
+-- إحصائيات لوحة التحكم، لا تعمل إلا لحساب الإدارة.
+create or replace function public.admin_dashboard_stats()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  result jsonb;
+begin
+  if not public.is_estabari_admin() then
+    raise exception 'غير مصرح لك بقراءة إحصائيات الإدارة';
+  end if;
+
+  select jsonb_build_object(
+    'total_providers', (select count(*) from public.providers),
+    'approved_providers', (select count(*) from public.providers where status = 'approved'),
+    'suspended_providers', (select count(*) from public.providers where status = 'suspended'),
+    'pending_providers', (select count(*) from public.providers where status = 'pending'),
+    'rejected_providers', (select count(*) from public.providers where status = 'rejected'),
+    'featured_providers', (select count(*) from public.providers where featured = true),
+    'verified_providers', (select count(*) from public.providers where verified = true),
+    'unique_visitors', (select count(*) from public.site_visitors),
+    'total_visits', (select coalesce(sum(visit_count), 0) from public.site_visitors)
+  ) into result;
+
+  return result;
+end;
+$$;
+
+revoke all on function public.admin_dashboard_stats() from public;
+grant execute on function public.admin_dashboard_stats() to authenticated;
+
 comment on table public.providers is 'مقدمو الخدمات المسجلون في مجمع خدمات إصطباري';
-comment on column public.providers.status is 'approved للنشر، pending للمراجعة لاحقًا، rejected للمرفوض، suspended للموقوف';
+comment on column public.providers.status is 'approved للنشر، pending للمراجعة، rejected للمرفوض، suspended للموقوف';
 comment on table public.site_visitors is 'عداد المتصفحات الفريدة وزياراتها بدون بيانات شخصية';
+comment on function public.is_estabari_admin() is 'يتحقق أن المستخدم الحالي هو حساب إدارة مجمع خدمات إصطباري';
+comment on function public.admin_dashboard_stats() is 'إحصائيات محمية للوحة الإدارة';
