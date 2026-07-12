@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d0e">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>لوحة تحكم مجمع خدمات إصطباري</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dark-theme.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+  <main class="admin-shell">
+    <section class="admin-login" id="loginView">
+      <div class="admin-login-card">
+        <a class="admin-brand" href="index.html">
+          <span class="brand-mark">إ</span>
+          <span><strong>مجمع خدمات إصطباري</strong><small>لوحة الإدارة الآمنة</small></span>
+        </a>
+
+        <div class="admin-login-copy">
+          <span class="admin-kicker">دخول الإدارة</span>
+          <h1>تحكّم كامل في دليل الخدمات</h1>
+          <p>أضف وعدّل واحذف الخدمات، وانشر أو أوقف أي خدمة، وراجع الإحصائيات من مكان واحد.</p>
+        </div>
+
+        <form class="admin-login-form" id="adminLoginForm">
+          <label>
+            <span>اسم المستخدم</span>
+            <input id="adminUsername" name="username" autocomplete="username" required placeholder="اسم المستخدم">
+          </label>
+          <label>
+            <span>كلمة المرور</span>
+            <div class="password-field">
+              <input id="adminPassword" name="password" type="password" autocomplete="current-password" required placeholder="كلمة المرور">
+              <button type="button" id="togglePassword" aria-label="إظهار كلمة المرور">◉</button>
+            </div>
+          </label>
+          <button class="admin-primary-button" id="loginButton" type="submit">
+            <span class="login-label">دخول لوحة التحكم</span>
+            <span class="admin-spinner" hidden></span>
+          </button>
+          <p class="admin-form-message" id="loginMessage" aria-live="polite"></p>
+        </form>
+
+        <a class="admin-back-link" href="index.html">← الرجوع للموقع</a>
+      </div>
+    </section>
+
+    <section class="admin-dashboard" id="dashboardView" hidden>
+      <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-head">
+          <a class="admin-brand" href="index.html">
+            <span class="brand-mark">إ</span>
+            <span><strong>خدمات إصطباري</strong><small>لوحة الإدارة</small></span>
+          </a>
+          <button class="admin-sidebar-close" id="closeSidebarButton" type="button" aria-label="إغلاق القائمة">×</button>
+        </div>
+
+        <nav class="admin-nav" aria-label="أقسام لوحة التحكم">
+          <button class="active" type="button" data-admin-section="overview"><span>◈</span> نظرة عامة</button>
+          <button type="button" data-admin-section="providers"><span>▦</span> إدارة الخدمات</button>
+          <button type="button" data-admin-section="add"><span>＋</span> إضافة خدمة</button>
+          <button type="button" data-admin-section="settings"><span>⚙</span> إعدادات وأمان</button>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+          <a href="index.html" target="_blank" rel="noopener">فتح الموقع ↗</a>
+          <button id="logoutButton" type="button">تسجيل الخروج</button>
+        </div>
+      </aside>
+
+      <div class="admin-main">
+        <header class="admin-topbar">
+          <div class="admin-topbar-title">
+            <button class="admin-menu-button" id="openSidebarButton" type="button" aria-label="فتح القائمة">☰</button>
+            <div>
+              <span class="admin-kicker">مرحبًا يا كاريكا</span>
+              <h1 id="adminPageTitle">نظرة عامة</h1>
+            </div>
+          </div>
+          <div class="admin-topbar-actions">
+            <span class="admin-connection" id="adminConnection"><i></i> جاري الاتصال...</span>
+            <button class="admin-secondary-button" id="refreshAdminButton" type="button">↻ تحديث</button>
+            <button class="admin-primary-button" type="button" data-open-provider-form>＋ إضافة خدمة</button>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <section class="admin-panel-section active" id="overviewSection" data-section="overview">
+            <div class="admin-stats-grid">
+              <article><span>إجمالي الخدمات</span><strong id="statTotal">—</strong><small>كل السجلات</small></article>
+              <article><span>الخدمات المنشورة</span><strong id="statApproved">—</strong><small>ظاهرة للزوار</small></article>
+              <article><span>الخدمات الموقوفة</span><strong id="statSuspended">—</strong><small>غير ظاهرة</small></article>
+              <article><span>الخدمات المميزة</span><strong id="statFeatured">—</strong><small>في مقدمة النتائج</small></article>
+              <article><span>الخدمات الموثقة</span><strong id="statVerified">—</strong><small>تم التأكد منها</small></article>
+              <article><span>الزوار الفريدون</span><strong id="statVisitors">—</strong><small id="statVisits">إجمالي الزيارات: —</small></article>
+            </div>
+
+            <div class="admin-overview-grid">
+              <article class="admin-card">
+                <div class="admin-card-heading">
+                  <div><span class="admin-kicker">أحدث التسجيلات</span><h2>آخر الخدمات المضافة</h2></div>
+                  <button type="button" data-admin-section="providers">عرض الكل</button>
+                </div>
+                <div class="admin-recent-list" id="recentProvidersList"></div>
+              </article>
+
+              <article class="admin-card admin-quick-actions">
+                <div class="admin-card-heading"><div><span class="admin-kicker">اختصارات</span><h2>إجراءات سريعة</h2></div></div>
+                <button type="button" data-open-provider-form><span>＋</span><div><strong>إضافة خدمة جديدة</strong><small>إضافة خدمة يدويًا من الإدارة</small></div></button>
+                <button type="button" data-admin-section="providers" data-status-shortcut="suspended"><span>⏸</span><div><strong>مراجعة الموقوف</strong><small>عرض الخدمات غير المنشورة</small></div></button>
+                <button type="button" id="exportCsvButton"><span>⇩</span><div><strong>تصدير نسخة CSV</strong><small>تحميل جميع بيانات الخدمات</small></div></button>
+                <a href="index.html" target="_blank" rel="noopener"><span>↗</span><div><strong>معاينة الموقع</strong><small>فتح واجهة الزوار</small></div></a>
+              </article>
+            </div>
+          </section>
+
+          <section class="admin-panel-section" id="providersSectionAdmin" data-section="providers">
+            <div class="admin-section-heading">
+              <div><span class="admin-kicker">إدارة كاملة</span><h2>الخدمات المسجلة</h2><p>بحث وتعديل ونشر وإيقاف وتوثيق وحذف أي خدمة.</p></div>
+              <button class="admin-primary-button" type="button" data-open-provider-form>＋ إضافة خدمة</button>
+            </div>
+
+            <div class="admin-filters">
+              <label class="admin-search"><span>⌕</span><input id="adminSearchInput" type="search" placeholder="ابحث بالاسم أو الهاتف أو الخدمة أو العنوان"></label>
+              <select id="adminStatusFilter" aria-label="تصفية الحالة">
+                <option value="all">كل الحالات</option>
+                <option value="approved">منشورة</option>
+                <option value="suspended">موقوفة</option>
+                <option value="pending">قيد المراجعة</option>
+                <option value="rejected">مرفوضة</option>
+              </select>
+              <select id="adminCategoryFilter" aria-label="تصفية القسم"><option value="all">كل الأقسام</option></select>
+              <select id="adminSortFilter" aria-label="الترتيب">
+                <option value="newest">الأحدث</option>
+                <option value="oldest">الأقدم</option>
+                <option value="name">حسب الاسم</option>
+                <option value="featured">المميزة أولًا</option>
+              </select>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>مقدم الخدمة</th><th>القسم والتواصل</th><th>الحالة</th><th>خصائص</th><th>تاريخ الإضافة</th><th>التحكم</th></tr></thead>
+                <tbody id="providersTableBody"></tbody>
+              </table>
+              <div class="admin-empty" id="adminEmptyState" hidden><span>⌕</span><h3>لا توجد نتائج</h3><p>غيّر البحث أو عوامل التصفية.</p></div>
+            </div>
+          </section>
+
+          <section class="admin-panel-section" id="addSection" data-section="add">
+            <div class="admin-section-heading"><div><span class="admin-kicker">إضافة سريعة</span><h2>أضف خدمة جديدة</h2><p>أدخل بيانات الخدمة وسيتم حفظها ونشرها مباشرةً.</p></div></div>
+            <div class="admin-inline-form" id="inlineProviderFormContainer"></div>
+          </section>
+
+          <section class="admin-panel-section" id="settingsSection" data-section="settings">
+            <div class="admin-section-heading"><div><span class="admin-kicker">الأمان والتشغيل</span><h2>إعدادات لوحة التحكم</h2></div></div>
+            <div class="admin-settings-grid">
+              <article class="admin-card"><span class="settings-icon">🔐</span><h3>تسجيل دخول آمن</h3><p>كلمة المرور لا تُحفظ في ملفات GitHub، ويتم التحقق منها بواسطة Supabase Auth.</p></article>
+              <article class="admin-card"><span class="settings-icon">🛡️</span><h3>حماية قاعدة البيانات</h3><p>التعديل والحذف متاحان لحساب الإدارة فقط من خلال سياسات RLS.</p></article>
+              <article class="admin-card"><span class="settings-icon">💾</span><h3>نسخة احتياطية</h3><p>استخدم زر تصدير CSV للاحتفاظ بنسخة من بيانات الخدمات.</p><button class="admin-secondary-button" type="button" id="exportCsvSettingsButton">تصدير الآن</button></article>
+              <article class="admin-card"><span class="settings-icon">🔑</span><h3>تغيير كلمة المرور</h3><p>يمكن تغيير كلمة مرور حساب الإدارة من إعدادات المستخدمين داخل Supabase.</p></article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="admin-dialog" id="providerDialog">
+    <form class="admin-provider-form" id="providerForm">
+      <div class="admin-dialog-head">
+        <div><span class="admin-kicker" id="providerDialogKicker">إدارة الخدمة</span><h2 id="providerDialogTitle">إضافة خدمة</h2></div>
+        <button type="button" data-close-provider-dialog aria-label="إغلاق">×</button>
+      </div>
+      <input type="hidden" name="id">
+      <div class="admin-form-grid">
+        <label><span>الاسم أو اسم النشاط *</span><input name="name" required minlength="3" maxlength="80"></label>
+        <label><span>رقم الموبايل *</span><input name="phone" required inputmode="tel" pattern="^(?:\+20|0)?1[0125][0-9]{8}$"></label>
+        <label><span>رقم واتساب</span><input name="whatsapp" inputmode="tel"></label>
+        <label><span>القسم *</span><select name="category" id="adminProviderCategory" required><option value="">اختار القسم</option></select></label>
+        <label class="full"><span>اسم الخدمة *</span><input name="service_name" required minlength="2" maxlength="80"></label>
+        <label class="full"><span>وصف الخدمة</span><textarea name="description" maxlength="300" rows="3"></textarea></label>
+        <label><span>المنطقة أو الشارع *</span><input name="area" required maxlength="80"></label>
+        <label><span>العنوان بالتفصيل</span><input name="address" maxlength="160"></label>
+        <label><span>مواعيد العمل</span><input name="opening_hours" maxlength="100"></label>
+        <label><span>رابط صفحة النشاط</span><input name="social_url" type="url"></label>
+        <label class="full"><span>رابط خرائط جوجل</span><input name="maps_url" type="url"></label>
+        <label><span>خط العرض</span><input name="latitude" type="number" step="any"></label>
+        <label><span>خط الطول</span><input name="longitude" type="number" step="any"></label>
+        <label><span>حالة النشر</span><select name="status"><option value="approved">منشورة</option><option value="suspended">موقوفة</option><option value="pending">قيد المراجعة</option><option value="rejected">مرفوضة</option></select></label>
+        <label><span>سبب الرفض أو الإيقاف</span><input name="rejection_reason" maxlength="200"></label>
+        <div class="admin-checkboxes full">
+          <label><input type="checkbox" name="delivery"><span>🚚 خدمة منزلية أو توصيل</span></label>
+          <label><input type="checkbox" name="emergency"><span>⚡ متاح للحالات العاجلة</span></label>
+          <label><input type="checkbox" name="verified"><span>✓ خدمة موثقة</span></label>
+          <label><input type="checkbox" name="featured"><span>★ خدمة مميزة</span></label>
+        </div>
+      </div>
+      <div class="admin-dialog-actions">
+        <button class="admin-secondary-button" type="button" data-close-provider-dialog>إلغاء</button>
+        <button class="admin-primary-button" id="saveProviderButton" type="submit"><span>حفظ الخدمة</span><i class="admin-spinner" hidden></i></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="admin-confirm-dialog" id="confirmDialog">
+    <div><span class="confirm-icon">!</span><h2 id="confirmTitle">تأكيد الإجراء</h2><p id="confirmMessage"></p><div><button class="admin-secondary-button" id="cancelConfirmButton" type="button">إلغاء</button><button class="admin-danger-button" id="confirmActionButton" type="button">تأكيد</button></div></div>
+  </dialog>
+
+  <div class="toast-region" id="adminToastRegion" aria-live="polite"></div>
+
+  <template id="providerFormTemplate">
+    <form class="admin-provider-form admin-embedded-form" data-inline-provider-form>
+      <div class="admin-form-grid">
+        <label><span>الاسم أو اسم النشاط *</span><input name="name" required minlength="3" maxlength="80"></label>
+        <label><span>رقم الموبايل *</span><input name="phone" required inputmode="tel" pattern="^(?:\+20|0)?1[0125][0-9]{8}$"></label>
+        <label><span>رقم واتساب</span><input name="whatsapp" inputmode="tel"></label>
+        <label><span>القسم *</span><select name="category" data-inline-category required><option value="">اختار القسم</option></select></label>
+        <label class="full"><span>اسم الخدمة *</span><input name="service_name" required minlength="2" maxlength="80"></label>
+        <label class="full"><span>وصف الخدمة</span><textarea name="description" maxlength="300" rows="3"></textarea></label>
+        <label><span>المنطقة أو الشارع *</span><input name="area" required maxlength="80"></label>
+        <label><span>العنوان بالتفصيل</span><input name="address" maxlength="160"></label>
+        <label><span>مواعيد العمل</span><input name="opening_hours" maxlength="100"></label>
+        <label><span>رابط صفحة النشاط</span><input name="social_url" type="url"></label>
+        <label class="full"><span>رابط خرائط جوجل</span><input name="maps_url" type="url"></label>
+        <div class="admin-checkboxes full"><label><input type="checkbox" name="delivery"><span>🚚 خدمة منزلية</span></label><label><input type="checkbox" name="emergency"><span>⚡ حالات عاجلة</span></label><label><input type="checkbox" name="verified"><span>✓ موثقة</span></label><label><input type="checkbox" name="featured"><span>★ مميزة</span></label></div>
+      </div>
+      <div class="admin-embedded-actions"><button class="admin-primary-button" type="submit">حفظ ونشر الخدمة</button></div>
+    </form>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>
